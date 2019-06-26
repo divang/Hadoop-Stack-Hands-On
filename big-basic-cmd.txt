@@ -1,0 +1,153 @@
+Sample Data File: student_data.txt
+001,Rajiv,Reddy,9848022337,Hyderabad
+002,siddarth,Battacharya,9848022338,Kolkata 
+003,Rajesh,Khanna,9848022339,Delhi
+004,Preethi,Agarwal,9848022330,Pune 
+005,Trupthi,Mohanthy,9848022336,Bhuwaneshwar
+006,Archana,Mishra,9848022335,Chennai.
+
+grunt> student = LOAD 'hdfs://localhost:9000/pig_data/student_data.txt' USING PigStorage(',') as ( id:int, firstname:chararray, lastname:chararray, phone:chararray, city:chararray );
+
+The illustrate operator gives you the step-by-step execution of a sequence of statements
+grunt> illustrate student;
+Output:
+INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$M ap - Aliases
+being processed per job phase (AliasName[line,offset]): M: student[1,10] C:  R:
+---------------------------------------------------------------------------------------------
+|student | id:int | firstname:chararray | lastname:chararray | phone:chararray | city:chararray |
+--------------------------------------------------------------------------------------------- 
+|        | 002    | siddarth            | Battacharya        | 9848022338      | Kolkata        |
+---------------------------------------------------------------------------------------------
+
+
+The explain operator is used to display the logical, physical, and MapReduce execution plans of a relation.
+grunt> explain student;
+Output:
+$ explain student;
+
+2015-10-05 11:32:43,660 [main]
+2015-10-05 11:32:43,660 [main] INFO  org.apache.pig.newplan.logical.optimizer
+.LogicalPlanOptimizer -
+{RULES_ENABLED=[AddForEach, ColumnMapKeyPrune, ConstantCalculator,
+GroupByConstParallelSetter, LimitOptimizer, LoadTypeCastInserter, MergeFilter, 
+MergeForEach, PartitionFilterOptimizer, PredicatePushdownOptimizer,
+PushDownForEachFlatten, PushUpFilter, SplitFilter, StreamTypeCastInserter]}  
+#-----------------------------------------------
+# New Logical Plan: 
+#-----------------------------------------------
+student: (Name: LOStore Schema:
+id#31:int,firstname#32:chararray,lastname#33:chararray,phone#34:chararray,city#
+35:chararray)
+| 
+|---student: (Name: LOForEach Schema:
+id#31:int,firstname#32:chararray,lastname#33:chararray,phone#34:chararray,city#
+35:chararray)
+    |   |
+    |   (Name: LOGenerate[false,false,false,false,false] Schema:
+id#31:int,firstname#32:chararray,lastname#33:chararray,phone#34:chararray,city#
+35:chararray)ColumnPrune:InputUids=[34, 35, 32, 33,
+31]ColumnPrune:OutputUids=[34, 35, 32, 33, 31]
+    |   |   | 
+    |   |   (Name: Cast Type: int Uid: 31) 
+    |   |   |     |   |   |---id:(Name: Project Type: bytearray Uid: 31 Input: 0 Column: (*))
+    |   |   |     
+    |   |   (Name: Cast Type: chararray Uid: 32)
+    |   |   | 
+    |   |   |---firstname:(Name: Project Type: bytearray Uid: 32 Input: 1
+Column: (*))
+    |   |   |
+    |   |   (Name: Cast Type: chararray Uid: 33)
+    |   |   |
+    |   |   |---lastname:(Name: Project Type: bytearray Uid: 33 Input: 2
+	 Column: (*))
+    |   |   | 
+    |   |   (Name: Cast Type: chararray Uid: 34)
+    |   |   |  
+    |   |   |---phone:(Name: Project Type: bytearray Uid: 34 Input: 3 Column:
+(*))
+    |   |   | 
+    |   |   (Name: Cast Type: chararray Uid: 35)
+    |   |   |  
+    |   |   |---city:(Name: Project Type: bytearray Uid: 35 Input: 4 Column:
+(*))
+    |   | 
+    |   |---(Name: LOInnerLoad[0] Schema: id#31:bytearray)
+    |   |  
+    |   |---(Name: LOInnerLoad[1] Schema: firstname#32:bytearray)
+    |   |
+    |   |---(Name: LOInnerLoad[2] Schema: lastname#33:bytearray)
+    |   |
+    |   |---(Name: LOInnerLoad[3] Schema: phone#34:bytearray)
+    |   | 
+    |   |---(Name: LOInnerLoad[4] Schema: city#35:bytearray)
+    |
+    |---student: (Name: LOLoad Schema: 
+id#31:bytearray,firstname#32:bytearray,lastname#33:bytearray,phone#34:bytearray
+,city#35:bytearray)RequiredFields:null 
+#-----------------------------------------------
+# Physical Plan: #-----------------------------------------------
+student: Store(fakefile:org.apache.pig.builtin.PigStorage) - scope-36
+| 
+|---student: New For Each(false,false,false,false,false)[bag] - scope-35
+    |   |
+    |   Cast[int] - scope-21
+    |   |
+    |   |---Project[bytearray][0] - scope-20
+    |   |  
+    |   Cast[chararray] - scope-24
+    |   |
+    |   |---Project[bytearray][1] - scope-23
+    |   | 
+    |   Cast[chararray] - scope-27
+    |   |  
+    |   |---Project[bytearray][2] - scope-26 
+    |   |  
+    |   Cast[chararray] - scope-30 
+    |   |  
+    |   |---Project[bytearray][3] - scope-29
+    |   |
+    |   Cast[chararray] - scope-33
+    |   | 
+    |   |---Project[bytearray][4] - scope-32
+    | 
+    |---student: Load(hdfs://localhost:9000/pig_data/student_data.txt:PigStorage(',')) - scope19
+2015-10-05 11:32:43,682 [main]
+INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - 
+File concatenation threshold: 100 optimistic? false
+2015-10-05 11:32:43,684 [main]
+INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOp timizer - 
+MR plan size before optimization: 1 2015-10-05 11:32:43,685 [main]
+INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.
+MultiQueryOp timizer - MR plan size after optimization: 1 
+#--------------------------------------------------
+# Map Reduce Plan                                   
+#--------------------------------------------------
+MapReduce node scope-37
+Map Plan
+student: Store(fakefile:org.apache.pig.builtin.PigStorage) - scope-36
+|
+|---student: New For Each(false,false,false,false,false)[bag] - scope-35
+    |   |
+    |   Cast[int] - scope-21 
+    |   |
+    |   |---Project[bytearray][0] - scope-20
+    |   |
+    |   Cast[chararray] - scope-24
+    |   |
+    |   |---Project[bytearray][1] - scope-23
+    |   |
+    |   Cast[chararray] - scope-27
+    |   | 
+    |   |---Project[bytearray][2] - scope-26 
+    |   | 
+    |   Cast[chararray] - scope-30 
+    |   |  
+    |   |---Project[bytearray][3] - scope-29 
+    |   | 
+    |   Cast[chararray] - scope-33
+    |   | 
+    |   |---Project[bytearray][4] - scope-32 
+    |  
+    |---student:
+Load(hdfs://localhost:9000/pig_data/student_data.txt:PigStorage(',')) - scope
+19-------- Global sort: false
