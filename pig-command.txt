@@ -1,0 +1,47 @@
+The data is in the pig distribution: 
+Download: excite-small.log
+2A9EABFB35F5B954	970916105432	+md foods +proteins
+BED75271605EBD0C	970916001949	yahoo chat
+BED75271605EBD0C	970916001954	yahoo chat
+BED75271605EBD0C	970916003523	yahoo chat
+BED75271605EBD0C	970916011322	yahoo search
+BED75271605EBD0C	970916011404	yahoo chat
+
+Pig Shell [commands are case sensitive]
+bin/pig –x local
+
+Aggregation & Grouping:
+Count the number of times each user appears in the excite data set:
+grunt> log = LOAD 'tutorial/data/excite-small.log' as (user,timestamp,query);
+grunt> grpd= GROUP log BY user;
+grunt> ctd= FOREACH grpd GENERATE group, COUNT(log);
+grunt> STORE ctd INTO 'output';
+
+Filtering:
+Apply a filter to the groups so that to get the high frequency users:
+grunt> log = LOAD 'tutorial/data/excite-small.log' as (user,timestamp,query);
+grunt> grpd= GROUP log BY user;
+grunt> ctd= FOREACH grpd GENERATE group, COUNT(log)  AS cnt;
+grunt> fltrd = FILTER ctd BY cnt > 50;
+grunt> STORE fltrd INTO 'output';
+
+cat output/part-r-000000
+B294E3062F036C3	61
+128315306CE647F6	78
+7D286B5592D83BBE	59
+
+Ordering:
+Sort the high frequency users by frequency:
+grunt> log = LOAD 'tutorial/data/excite-small.log' as (user,timestamp,query);
+grunt> grpd= GROUP log BY user;
+grunt> ctd= FOREACH grpd GENERATE group, COUNT(log)  AS cnt;
+grunt> fltrd = FILTER ctd BY cnt > 50;
+grunt> srtd = ORDER fltrd BY cnt;
+grunt> STORE srtd INTO 'output';
+
+cat output/part-r-00000
+7D286B5592D83BBE	59
+0B294E3062F036C3	61
+128315306CE647F6	78
+
+
