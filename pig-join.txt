@@ -1,0 +1,76 @@
+customers.txt
+1,Ramesh,32,Ahmedabad,2000.00
+2,Khilan,25,Delhi,1500.00
+3,kaushik,23,Kota,2000.00
+4,Chaitali,25,Mumbai,6500.00 
+5,Hardik,27,Bhopal,8500.00
+6,Komal,22,MP,4500.00
+7,Muffy,24,Indore,10000.00
+
+orders.txt
+102,2009-10-08 00:00:00,3,3000
+100,2009-10-08 00:00:00,3,1500
+101,2009-11-20 00:00:00,2,1560
+103,2008-05-20 00:00:00,4,2060
+
+Load:
+grunt> customers = LOAD 'hdfs://localhost:9000/pig_data/customers.txt' USING PigStorage(',')
+   as (id:int, name:chararray, age:int, address:chararray, salary:int);
+  
+grunt> orders = LOAD 'hdfs://localhost:9000/pig_data/orders.txt' USING PigStorage(',')
+   as (oid:int, date:chararray, customer_id:int, amount:int);
+   
+Self - join:
+grunt> customers3 = JOIN customers1 BY id, customers2 BY id;
+grunt> Dump customers3;
+(1,Ramesh,32,Ahmedabad,2000,1,Ramesh,32,Ahmedabad,2000)
+(2,Khilan,25,Delhi,1500,2,Khilan,25,Delhi,1500)
+(3,kaushik,23,Kota,2000,3,kaushik,23,Kota,2000)
+(4,Chaitali,25,Mumbai,6500,4,Chaitali,25,Mumbai,6500)
+(5,Hardik,27,Bhopal,8500,5,Hardik,27,Bhopal,8500)
+(6,Komal,22,MP,4500,6,Komal,22,MP,4500)
+(7,Muffy,24,Indore,10000,7,Muffy,24,Indore,10000)
+
+Inner Join
+grunt> coustomer_orders = JOIN customers BY id, orders BY customer_id;
+grunt> Dump coustomer_orders;
+(2,Khilan,25,Delhi,1500,101,2009-11-20 00:00:00,2,1560)
+(3,kaushik,23,Kota,2000,100,2009-10-08 00:00:00,3,1500)
+(3,kaushik,23,Kota,2000,102,2009-10-08 00:00:00,3,3000)
+(4,Chaitali,25,Mumbai,6500,103,2008-05-20 00:00:00,4,2060)
+
+
+Left Outer Join
+grunt> outer_left = JOIN customers BY id LEFT OUTER, orders BY customer_id;
+grunt> Dump outer_left;
+(1,Ramesh,32,Ahmedabad,2000,,,,)
+(2,Khilan,25,Delhi,1500,101,2009-11-20 00:00:00,2,1560)
+(3,kaushik,23,Kota,2000,100,2009-10-08 00:00:00,3,1500)
+(3,kaushik,23,Kota,2000,102,2009-10-08 00:00:00,3,3000)
+(4,Chaitali,25,Mumbai,6500,103,2008-05-20 00:00:00,4,2060)
+(5,Hardik,27,Bhopal,8500,,,,)
+(6,Komal,22,MP,4500,,,,)
+(7,Muffy,24,Indore,10000,,,,) 
+
+
+Right Outer Join
+grunt> outer_right = JOIN customers BY id RIGHT, orders BY customer_id;
+grunt> Dump outer_right
+(2,Khilan,25,Delhi,1500,101,2009-11-20 00:00:00,2,1560)
+(3,kaushik,23,Kota,2000,100,2009-10-08 00:00:00,3,1500)
+(3,kaushik,23,Kota,2000,102,2009-10-08 00:00:00,3,3000)
+(4,Chaitali,25,Mumbai,6500,103,2008-05-20 00:00:00,4,2060)
+
+Full Outer Join
+grunt> outer_full = JOIN customers BY id FULL OUTER, orders BY customer_id;
+grun> Dump outer_full; 
+(1,Ramesh,32,Ahmedabad,2000,,,,)
+(2,Khilan,25,Delhi,1500,101,2009-11-20 00:00:00,2,1560)
+(3,kaushik,23,Kota,2000,100,2009-10-08 00:00:00,3,1500)
+(3,kaushik,23,Kota,2000,102,2009-10-08 00:00:00,3,3000)
+(4,Chaitali,25,Mumbai,6500,103,2008-05-20 00:00:00,4,2060)
+(5,Hardik,27,Bhopal,8500,,,,)
+(6,Komal,22,MP,4500,,,,)
+(7,Muffy,24,Indore,10000,,,,)
+   
+
