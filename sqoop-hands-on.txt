@@ -27,7 +27,7 @@ sqoop import \
 --m 1 \
 --incremental append \
 --check-column id \
--last value 3
+--last-value 3
 
 Export:
 
@@ -52,4 +52,15 @@ sqoop export \
 --username root \
 --table employee \ 
 --export-dir emp_data.txt
+
+Sqoop Job:
+sqoop job --create myjob \
+--import \
+--connect jdbc:mysql://localhost/db \
+--username root \
+--table employee --m 1
+
+sqoop job --list
+sqoop job --show myjob
+sqoop job --exec myjob
 
