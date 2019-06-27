@@ -1,7 +1,30 @@
 mysql> create database testDb; 
 mysql> use testDb;
 mysql> create table student(id integer,name char(20));
-mysql> insert into student values(2,'Stefin');
+mysql> insert into student values(1,'Stefin');
 mysql> insert into student values(2,'Aaditya');
 
 sqoop import --connect jdbc:mysql://localhost/testDb --username root --table student --m 1
+
+
+Store to specific Hadoop directory:
+sqoop import \
+--connect jdbc:mysql://localhost/testDb \
+--username root \
+--table student \
+--m 1 \
+--where "name='Aaditya'" \
+--target-dir /student_from_mysql
+
+Incremental import:
+mysql> insert into student values(4,'Sudhanshu');
+mysql> insert into student values(5,'Nitya');
+
+sqoop import \
+--connect jdbc:mysql://localhost/testDb \
+--username root \
+--table student \
+--m 1 \
+--incremental append \
+--check-column id \
+-last value 3
