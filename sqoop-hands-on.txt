@@ -1,0 +1,7 @@
+mysql> create database testDb; 
+mysql> use testDb;
+mysql> create table student(id integer,name char(20));
+mysql> insert into student values(2,'Stefin');
+mysql> insert into student values(2,'Aaditya');
+
+sqoop import --connect jdbc:mysql://localhost/databasename --username root --table tablename --m 1
