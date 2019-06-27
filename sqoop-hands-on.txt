@@ -64,3 +64,14 @@ sqoop job --list
 sqoop job --show myjob
 sqoop job --exec myjob
 
+sqoop codegen \
+--connect jdbc:mysql://localhost/userdb \
+--username root \ 
+--table emp
+
+To get the Java Class
+cd /tmp/sqoop-hadoop/compile/<...>
+$ ls
+emp.class
+emp.jar
+emp.java
