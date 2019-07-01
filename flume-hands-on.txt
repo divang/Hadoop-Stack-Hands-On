@@ -1,3 +1,4 @@
+Create example.conf 
 # Name the components on this agent 
 a1.sources = r1 
 a1.sinks = k1 
@@ -15,3 +16,14 @@ a1.channels.c1.transactionCapacity = 100
 # Bind the source and sink to the channel 
 a1.sources.r1.channels = c1 
 a1.sinks.k1.channel = c1
+
+
+1) flume-ng agent --conf conf --conf-file example.conf --name a1 -Dflume.root.logger=INFO,console 
+
+2) Source 
+telnet localhost 44444 Trying 127.0.0.1... Connected to localhost.localdomain (127.0.0.1). Escape character is '^]'. 
+Hello flume! <ENTER>
+
+3) Sink
+2019-01-27 07:27:13,596 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - org.apache.flume.sink.LoggerSink.process(LoggerSink.java:95)] Event: { headers:{} body: 68 65 6C 6C 6F 20 66 6C 75 6D 65 0D   hello flume. }
+
