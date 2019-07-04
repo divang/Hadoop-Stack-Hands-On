@@ -43,3 +43,65 @@ Get rows Name as ‘DAVID’ and count is less than 100
 scala> rows.filter(row=>row(1).contains("DAVID")).filter(row=>row(4).toInt<100).take(5)
 res19: Array[Array[String]] = Array(Array(2016, DAVID, Nassau, M, 58), Array(2016, DAVID, Bronx, M, 54), Array(2016, DAVID, Rockland, M, 47), Array(2016, DAVID, Suffolk, M, 45), Array(2016, DAVID, New York, M, 38))
 
+
+Transformation APIs:
+
+MAP(func)
+babyNames.map(line=> line.split(","))
+res6: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[5] at map at <console>:26
+Iterates over every line in the babyNames RDD (originally created from baby_names.csv file) and splits into new RDD of Arrays of Strings. 
+
+FLATMAP(func)
+Similar to map, but each input item can be mapped to 0 or more output items (so func should return a Seq rather than a single item)
+scala> sc.parallelize(data).map(x=> List(x,x)).collectres10: 
+Array[List[Int]] = Array(List(1, 1), List(2, 2))
+scala> sc.parallelize(data).flatMap(x=> List(x,x)).collect
+res11: Array[Int] = Array(1, 1, 2, 2)
+
+MAPPARTITIONS(func)
+Consider mapPartitions a tool for performance optimization, it is distributed over partitions.
+scala> val parallel=sc.parallelize(1 to 10, 9)
+parallel: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[26] at parallelize at <console>:24
+scala> parallel.mapPartitions(x => List(x.next).iterator).foreach(println)
+What's the difference between an RDD's map and mapPartitions
+map works the function being utilized at a per element level while mapPartitions exercises the function at the partition level.
+
+MAPPARTITIONSWITHINDEX(FUNC)
+Similar to mapPartitions, but also provides a function with an Int value to indicate the index position of the partition.
+val parallel=sc.parallelize(1 to 10, 3)
+parallel.mapPartitionsWithIndex((index: Int, it:Iterator[Int]) => it.toList.map(x => s"index is $index" + " value is "+x).iterator).foreach(println)
+index is 0 value is 1
+index is 1 value is 4
+index is 2 value is 7
+
+SAMPLE(withReplacement, fraction, seed)
+Return a random sample subset RDD of the input RDD	scala> sc.parallelize(1 to 9).sample(true,.7).collect
+res27: Array[Int] = Array(1, 3, 7, 7, 8)
+
+UNION(A different RDD)
+Return the union of two RDDs
+scala> val d1 = sc.parallelize(1 to 5)
+scala> val d2 = sc.parallelize(6 to 10)
+scala> d1.union(d2).collect
+res28: Array[Int] = Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+DISTINCT
+Return a new RDD with distinct elements within a source RDD
+scala> parallel.union(par2).distinct.collect
+res412: Array[Int] = Array(1, 2, 3, 4, 5, 6, 7,8,9,10)
+
+The group of transformation functions (groupByKey, reduceByKey, aggregateByKey, sortByKey, join) all act on key,value RDDs.  
+GROUPBYKEY([NUMTASKS])
+When called on a dataset of (K, V) pairs, returns a dataset of (K, Iterable<V>) pairs. 
+scala> val rows =  babyNames.map(_.split(","))
+scala> val nameToCountry = rows.map(arr=>(arr(0),arr(1)))
+scala> nameToCountry.groupByKey.collect
+res35: Array[(String, Iterable[String])] = Array( (ADITYO,CompactBuffer(Queens)), (JERZON,CompactBuffer(Suffolk)), (PERY,CompactBuffer(Kings, Orange))…
+
+REDUCEBYKEY(FUNC, [NUMTASKS])
+Operates on (K,V) pairs of course, but the func must be of type (V,V) => V
+scala> val nameToCount = babyNames.filter(!_.contains("Count")).map(_.split(",")).map(arr=>(arr(1),arr(4).toInt)).reduceByKey((v1,v2) => v1+v2).filter(t => t._2>200).collect
+
+AGGREGATEBYKEY(ZEROVALUE)(SEQOP, COMBOP, [NUMTASKS])
+scala> val nameToCount = babyNames.filter(!_.contains("Count")).map(_.split(",")).map(arr=>(arr(1),arr(4).toInt)).aggregateByKey(0)((k,v) => v+k, (v,k) => k+v).collect
+
