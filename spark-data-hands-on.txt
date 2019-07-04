@@ -34,3 +34,12 @@ Count of Unique Country
 
 scala> rows.map(r=>r(2)).distinct.count
 res17: Long = 126
+
+Get rows which has name as ‘DAVID’
+scala> rows.filter(row=>row(1).contains("DAVID")).take(5)
+res18: Array[Array[String]] = Array(Array(2016, DAVID, Kings, M, 231), Array(2016, DAVID, Queens, M, 106), Array(2016, DAVID, Nassau, M, 58), Array(2016, DAVID, Bronx, M, 54), Array(2016, DAVID, Rockland, M, 47))
+Get rows Name as ‘DAVID’ and count is less than 100
+
+scala> rows.filter(row=>row(1).contains("DAVID")).filter(row=>row(4).toInt<100).take(5)
+res19: Array[Array[String]] = Array(Array(2016, DAVID, Nassau, M, 58), Array(2016, DAVID, Bronx, M, 54), Array(2016, DAVID, Rockland, M, 47), Array(2016, DAVID, Suffolk, M, 45), Array(2016, DAVID, New York, M, 38))
+
