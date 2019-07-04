@@ -4,3 +4,33 @@ Year,First Name,County,Sex,Count
 2016,DAVID,Kings,M,231
 2016,JACOB,Kings,M,228
 2016,ETHAN,Queens,M,224
+
+
+Spark APIs:
+
+Read a file and convert to RDD
+scala> val babyNames=sc.textFile("Baby_Names__Beginning_2007.csv")
+babyNames: org.apache.spark.rdd.RDD[String] = Baby_Names__Beginning_2007.csv MapPartitionsRDD[1] at textFile at <console>:24
+Get count lines in file
+
+scala> babyNames.count
+res0: Long = 235511
+Get first row
+
+scala> babyNames.first
+res1: String = Year,First Name,County,Sex,Count
+Convert row to RDD of Array[String]
+
+scala> val rows = babyNames.map(line=> line.split(","))
+rows: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[15] at map at <console>:25
+Get 10 names from RDD of Array[String]
+
+Scala> rows.map(r=>r(1)).take(5)
+Get 10 Countries from RDD of Array[String]
+
+scala> rows.map(r=>r(2)).take(5)
+res12: Array[String] = Array(County, Kings, Kings, Queens, Queens)
+Count of Unique Country 
+
+scala> rows.map(r=>r(2)).distinct.count
+res17: Long = 126
