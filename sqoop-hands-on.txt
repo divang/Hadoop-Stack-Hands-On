@@ -4,7 +4,7 @@ sudo mysqld_safe --skip-grant-tables &
 mysql -uroot
 
 mysql>use mysql;
-mysql>update user set authentication_string=PASSWORD("mynewpassword") where User='root';
+mysql>update user set authentication_string=PASSWORD("12345") where User='root';
 mysql>flush privileges;
 mysql>quit
 
