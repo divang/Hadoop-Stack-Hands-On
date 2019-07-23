@@ -1,8 +1,6 @@
-Before start set the mysql root password in CDH VM:
-sudo /etc/init.d/mysql stop
+========== Set the mysql root password in CDH VM =========
 sudo /etc/init.d/mysqld stop
 sudo mysqld_safe --skip-grant-tables &
-
 mysql -uroot
 
 mysql>use mysql;
@@ -10,11 +8,9 @@ mysql>update user set authentication_string=PASSWORD("mynewpassword") where User
 mysql>flush privileges;
 mysql>quit
 
-sudo /etc/init.d/mysql start
 sudo /etc/init.d/mysqld start
 mysql -u root -p
-
-Paswword has been set.
+========== Paswword has been set =======
 
 mysql> create database testDb; 
 mysql> use testDb;
