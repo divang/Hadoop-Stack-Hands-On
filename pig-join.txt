@@ -21,7 +21,10 @@ grunt> orders = LOAD 'hdfs://localhost:9000/pig_data/orders.txt' USING PigStorag
    as (oid:int, date:chararray, customer_id:int, amount:int);
    
 Self - join:
-grunt> customers3 = JOIN customers BY id, customers BY id;
+grunt> customers1 = LOAD 'hdfs://localhost:9000/pig_data/customers.txt' USING PigStorage(',')
+   as (id:int, name:chararray, age:int, address:chararray, salary:int);
+ 
+grunt> customers3 = JOIN customers BY id, customers1 BY id;
 grunt> Dump customers3;
 (1,Ramesh,32,Ahmedabad,2000,1,Ramesh,32,Ahmedabad,2000)
 (2,Khilan,25,Delhi,1500,2,Khilan,25,Delhi,1500)
