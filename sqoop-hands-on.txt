@@ -54,13 +54,16 @@ mysql> CREATE TABLE employee (
    dept VARCHAR(10));
 
 Create a file in HDFS:
-emp_data.txt
+emp_data.txt (create in local and copy t)
 1201, gopal,     manager, 50000, TP
 1202, manisha,   preader, 50000, TP
 1203, kalil,     php dev, 30000, AC
 1204, prasanth,  php dev, 30000, AC
 1205, kranthi,   admin,   20000, TP
 1206, satish p,  grp des, 20000, GR
+
+Push emp_data.txt to HDFS:
+hdfs dfs -copyFromLocal emp_data.txt
 
 sqoop export \
 --connect jdbc:mysql://localhost/db \
