@@ -22,6 +22,7 @@ grunt> STORE ctd INTO 'output';
 
 Check output in HDFS:
 hdfs dfs -ls output
+hdfs dfs -cat output/part-r-000000
 
 Filtering:
 Apply a filter to the groups so that to get the high frequency users:
@@ -31,7 +32,7 @@ grunt> ctd= FOREACH grpd GENERATE group, COUNT(log)  AS cnt;
 grunt> fltrd = FILTER ctd BY cnt > 50;
 grunt> STORE fltrd INTO 'output';
 
-cat output/part-r-000000
+hdfs dfs -cat output/part-r-000000
 B294E3062F036C3	61
 128315306CE647F6	78
 7D286B5592D83BBE	59
