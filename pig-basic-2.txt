@@ -7,15 +7,21 @@ BED75271605EBD0C	970916003523	yahoo chat
 BED75271605EBD0C	970916011322	yahoo search
 BED75271605EBD0C	970916011404	yahoo chat
 
+Pig looks the input file in HDFS:
+hdfs dfs -copyFromLocal excite-small.log
+
 Pig Shell [commands are case sensitive]
 bin/pig –x local
 
 Aggregation & Grouping:
 Count the number of times each user appears in the excite data set:
-grunt> log = LOAD 'tutorial/data/excite-small.log' as (user,timestamp,query);
+grunt> log = LOAD 'excite-small.log' as (user,timestamp,query);
 grunt> grpd= GROUP log BY user;
 grunt> ctd= FOREACH grpd GENERATE group, COUNT(log);
 grunt> STORE ctd INTO 'output';
+
+Check output in HDFS:
+hdfs dfs -ls output
 
 Filtering:
 Apply a filter to the groups so that to get the high frequency users:
