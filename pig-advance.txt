@@ -15,10 +15,10 @@ orders.txt
 101,2009-11-20 00:00:00,2,1560
 103,2008-05-20 00:00:00,4,2060
 
-grunt> customers = LOAD 'hdfs://localhost:9000/pig_data/customers.txt' USING PigStorage(',')
+grunt> customers = LOAD 'customers.txt' USING PigStorage(',')
    as (id:int, name:chararray, age:int, address:chararray, salary:int);
   
-grunt> orders = LOAD 'hdfs://localhost:9000/pig_data/orders.txt' USING PigStorage(',')
+grunt> orders = LOAD 'orders.txt' USING PigStorage(',')
    as (oid:int, date:chararray, customer_id:int, amount:int);
 
 grunt> cross_data = CROSS customers, orders;
@@ -39,10 +39,10 @@ student_data2.txt
 7,Komal,Nayak,9848022334,trivendram.
 8,Bharathi,Nambiayar,9848022333,Chennai.
 
-grunt> student1 = LOAD 'hdfs://localhost:9000/pig_data/student_data1.txt' USING PigStorage(',') 
+grunt> student1 = LOAD 'student_data1.txt' USING PigStorage(',') 
    as (id:int, firstname:chararray, lastname:chararray, phone:chararray, city:chararray); 
  
-grunt> student2 = LOAD 'hdfs://localhost:9000/pig_data/student_data2.txt' USING PigStorage(',') 
+grunt> student2 = LOAD 'student_data2.txt' USING PigStorage(',') 
    as (id:int, firstname:chararray, lastname:chararray, phone:chararray, city:chararray);
 
 grunt> student = UNION student1, student2;
