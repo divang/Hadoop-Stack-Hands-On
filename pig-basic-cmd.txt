@@ -9,7 +9,7 @@ Sample Data File: student_data.txt
 Get HDFS port:
 hdfs getconf -confKey fs.defaultFS 
 
-grunt> student = LOAD 'hdfs://localhost:9000/pig_data/student_data.txt' USING PigStorage(',') as ( id:int, firstname:chararray, lastname:chararray, phone:chararray, city:chararray );
+grunt> student = LOAD 'hdfs://quickstart.cloudera:8020/user/cloudera/student_data.txt' USING PigStorage(',') as ( id:int, firstname:chararray, lastname:chararray, phone:chararray, city:chararray );
 
 The illustrate operator gives you the step-by-step execution of a sequence of statements
 grunt> illustrate student;
