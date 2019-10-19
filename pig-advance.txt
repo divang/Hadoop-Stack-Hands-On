@@ -23,8 +23,10 @@ grunt> orders = LOAD 'orders.txt' USING PigStorage(',')
 
 grunt> cross_data = CROSS customers, orders;
 
+grunt> student_details = LOAD 'student_data1.txt' USING PigStorage(',') 
+   as (id:int, firstname:chararray, lastname:chararray, age:int, phone:chararray, city:chararray); 
 
-Split:
+Union:
 student_data1.txt
 001,Rajiv,Reddy,21,9848022337,Hyderabad
 002,siddarth,Battacharya,22,9848022338,Kolkata
@@ -34,19 +36,31 @@ student_data1.txt
 006,Archana,Mishra,23,9848022335,Chennai 
 007,Komal,Nayak,24,9848022334,trivendram 
 008,Bharathi,Nambiayar,24,9848022333,Chennai
-
+  
 student_data2.txt
-7,Komal,Nayak,9848022334,trivendram.
-8,Bharathi,Nambiayar,9848022333,Chennai.
-
-grunt> student1 = LOAD 'student_data1.txt' USING PigStorage(',') 
-   as (id:int, firstname:chararray, lastname:chararray, phone:chararray, city:chararray); 
- 
-grunt> student2 = LOAD 'student_data2.txt' USING PigStorage(',') 
-   as (id:int, firstname:chararray, lastname:chararray, phone:chararray, city:chararray);
+7,Komal,Nayak,26,9848022334,trivendram.
+8,Bharathi,Nambiayar,30,9848022333,Chennai.
 
 grunt> student = UNION student1, student2;
+
+
+Split:
+student_data.txt
+001,Rajiv,Reddy,21,9848022337,Hyderabad
+002,siddarth,Battacharya,22,9848022338,Kolkata
+003,Rajesh,Khanna,22,9848022339,Delhi 
+004,Preethi,Agarwal,21,9848022330,Pune 
+005,Trupthi,Mohanthy,23,9848022336,Bhuwaneshwar 
+006,Archana,Mishra,23,9848022335,Chennai 
+007,Komal,Nayak,24,9848022334,trivendram 
+008,Bharathi,Nambiayar,24,9848022333,Chennai
+7,Komal,Nayak,26,9848022334,trivendram.
+8,Bharathi,Nambiayar,30,9848022333,Chennai.
+
+grunt> student_details = LOAD 'student_data1.txt' USING PigStorage(',') 
+   as (id:int, firstname:chararray, lastname:chararray, age:int, phone:chararray, city:chararray); 
+
+
 grunt>SPLIT student_details into student_details1 if age<23, student_details2 if (22<age and age>25);
-grunt> Dump student_details1; 
-grunt> Dump student_details2; 
+grunt> Dump student_details1; grunt> Dump student_details2; 
 
