@@ -1,4 +1,12 @@
-- Download JDK: https://www.oracle.com/java/technologies/javase-jdk8-downloads.html#license-lightbox
+- Download JDK: 
+https://www.oracle.com/java/technologies/javase-jdk8-downloads.html#license-lightbox
+
+- Download Hadoop: 
+https://mirrors.estointernet.in/apache/hadoop/common/hadoop-2.10.0/hadoop-2.10.0.tar.gz
+
+- Single Node Hadoop Setup using YARN:
+https://hadoop.apache.org/docs/r2.7.4/hadoop-project-dist/hadoop-common/SingleCluster.html#YARN_on_Single_Node
+
 - set ~/.bash_profile [**replace jdk1.8.0_251 folder path]
     export JDK_HOME=/home/divangsharma/Downloads/jdk1.8.0_251/bin
     export JAVA_HOME=/home/divangsharma/Downloads/jdk1.8.0_251/jre
